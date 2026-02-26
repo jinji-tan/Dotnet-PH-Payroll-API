@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payroll Management</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            margin: 0;
+            background: #f0f2f5;
+            color: #1c1e21;
+        }
+
+        .sidebar {
+            width: 240px;
+            height: 100vh;
+            background: #1877f2;
+            color: white;
+            padding: 25px;
+            position: fixed;
+        }
+
+        .sidebar h2 {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+        }
+
+        .sidebar p {
+            margin: 15px 0;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: 0.3s;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .sidebar p:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .main-content {
+            margin-left: 290px;
+            padding: 40px;
+            width: calc(100% - 330px);
+        }
+
+        .section {
+            display: none;
+        }
+
+        .active-section {
+            display: block;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .card,
+        .form-section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+
+        .stats-container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .card h3 {
+            color: #65676b;
+            font-size: 0.8rem;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        .card p {
+            font-size: 1.7rem;
+            font-weight: bold;
+            margin: 10px 0 0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+        }
+
+        input,
+        select {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        .btn {
+            background: #1877f2;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-pay {
+            background: #42b72a;
+            padding: 6px 10px;
+            font-size: 0.75rem;
+        }
+
+        .btn-view {
+            background: #65676b;
+            padding: 6px 10px;
+            font-size: 0.75rem;
+        }
+
+        .btn-edit {
+            background: #f7b924;
+            padding: 6px 10px;
+            font-size: 0.75rem;
+            color: #000;
+        }
+
+        .btn-delete {
+            background: #fa3e3e;
+            padding: 6px 10px;
+            font-size: 0.75rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        th {
+            background: #f8f9fa;
+            color: #65676b;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        #employeeSearch {
+            width: 100%;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <h2>Jinji Payroll</h2>
+        <p onclick="showSection('dashboard')">🏠 Dashboard</p>
+        <p onclick="showSection('employees')">👥 Employees</p>
+        <p onclick="showSection('attendance')">📅 Attendance</p>
+    </div>
+
+    <div class="main-content">
+        <div id="dashboard-sec" class="section active-section">
+            <header>
+                <h1>Dashboard</h1><button class="btn" onclick="loadDashboard()">🔄 Sync</button>
+            </header>
+            <div class="stats-container">
+                <div class="card" style="border-left: 5px solid #1877f2;">
+                    <h3>Employees</h3>
+                    <p id="totalEmployees">0</p>
+                </div>
+                <div class="card" style="border-left: 5px solid #42b72a;">
+                    <h3>Monthly Payout</h3>
+                    <p id="totalPayroll">₱0.00</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="employees-sec" class="section">
+            <header>
+                <h1>Employee Management</h1>
+            </header>
+            <section class="form-section">
+                <form id="employeeForm" class="form-grid">
+                    <input type="text" id="fName" placeholder="First Name" required>
+                    <input type="text" id="lName" placeholder="Last Name" required>
+                    <input type="text" id="mName" placeholder="Middle Name">
+                    <input type="date" id="dob" required>
+                    <input type="number" id="rate" placeholder="Daily Rate" required>
+                    <select id="schedule">
+                        <option value="MWF">MWF</option>
+                        <option value="TTHS">TTHS</option>
+                    </select>
+                    <button type="submit" class="btn">＋ Add Employee</button>
+                </form>
+            </section>
+            <input type="text" id="employeeSearch" placeholder="🔍 Search employees..." onkeyup="filterEmployees()">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Rate</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="employeeBody"></tbody>
+            </table>
+        </div>
+
+        <div id="attendance-sec" class="section">
+            <header>
+                <h1>Log Attendance</h1>
+            </header>
+            <section class="form-section">
+                <form id="attendanceForm" class="form-grid">
+                    <select id="attEmployeeId" required>
+                        <option value="">Select...</option>
+                    </select>
+                    <input type="date" id="attDate" required>
+                    <select id="attStatus">
+                        <option value="true">Present</option>
+                        <option value="false">Absent</option>
+                    </select>
+                    <button type="submit" class="btn" style="background: #42b72a;">Save Record</button>
+                </form>
+            </section>
+        </div>
+    </div>
+
+    <script>
+
+        const API_BASE = "http://localhost:5000/api";
+
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active-section'));
+            document.getElementById(id + '-sec').classList.add('active-section');
+            loadDashboard();
+        }
+
+        function filterEmployees() {
+            const term = document.getElementById('employeeSearch').value.toLowerCase();
+            document.querySelectorAll('#employeeBody tr').forEach(row => {
+                row.style.display = row.cells[1].innerText.toLowerCase().includes(term) ? "" : "none";
+            });
+        }
+
+        async function loadDashboard() {
+            try {
+                const stats = await fetch(`${API_BASE}/Dashboard`).then(r => r.json());
+                document.getElementById('totalEmployees').innerText = stats.totalEmployees;
+                document.getElementById('totalPayroll').innerText = `₱${stats.totalPayrollMonthly.toLocaleString()}`;
+
+                const employees = await fetch(`${API_BASE}/Employee`).then(r => r.json());
+                document.getElementById('employeeBody').innerHTML = employees.map(emp => `
+                    <tr>
+                        <td>${emp.id}</td>
+                        <td>${emp.fullName}</td>
+                        <td>₱${emp.dailyRate.toLocaleString()}</td>
+                        <td>
+                            <button class="btn btn-pay" onclick="generatePay(${emp.id})">💰 Pay</button>
+                            <button class="btn btn-view" onclick="viewAttendance(${emp.id})">👁️ View</button>
+                            <button class="btn btn-edit" onclick="updateRate(${emp.id}, '${emp.fullName}')">✏️</button>
+                            <button class="btn btn-delete" onclick="deleteEmployee(${emp.id})">🗑️</button>
+                        </td>
+                    </tr>`).join('');
+                document.getElementById('attEmployeeId').innerHTML = '<option value="">Select...</option>' +
+                    employees.map(e => `<option value="${e.id}">${e.fullName}</option>`).join('');
+            } catch (err) { console.error("Sync failed", err); }
+        }
+
+        document.getElementById('employeeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                firstName: document.getElementById('fName').value,
+                lastName: document.getElementById('lName').value,
+                middleName: document.getElementById('mName').value,
+                dateOfBirth: document.getElementById('dob').value,
+                dailyRate: parseFloat(document.getElementById('rate').value),
+                workingDays: document.getElementById('schedule').value
+            };
+            await fetch(`${API_BASE}/Employee`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            alert("Saved!"); loadDashboard(); e.target.reset();
+        });
+
+        document.getElementById('attendanceForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                employeeId: parseInt(document.getElementById('attEmployeeId').value),
+                recordDate: document.getElementById('attDate').value,
+                isPresent: document.getElementById('attStatus').value === "true"
+            };
+            const res = await fetch(`${API_BASE}/Attendance`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            if (res.ok) alert("Logged!"); e.target.reset();
+        });
+
+        async function generatePay(id) {
+            const start = prompt("Start Date:", "2026-02-23");
+            const end = prompt("End Date:", "2026-02-28");
+            if (!start || !end) return;
+
+            try {
+                const res = await fetch(`${API_BASE}/Payslips/generate/${id}?startDate=${start}&endDate=${end}`, {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (!res.ok) { alert("⚠️ " + await res.text()); return; }
+
+                const result = await res.json();
+
+                const gross = result.grossPay ?? 0;
+                const sss = result.ssS_Deduction ?? 0;
+                const philHealth = result.philHealth_Deduction ?? 0;
+                const pagIbig = result.pagIBIG_Deduction ?? 0;
+                const tax = result.tax_Withheld ?? 0;
+                const net = result.netPay ?? 0;
+
+                const totalDeductions = sss + philHealth + pagIbig + tax;
+
+                alert(`✅ PAYSLIP GENERATED\n` +
+                    `----------------------------\n` +
+                    `Gross Pay: ₱${gross.toLocaleString()}\n` +
+                    `----------------------------\n` +
+                    `SSS: ₱${sss.toLocaleString()}\n` +
+                    `PhilHealth: ₱${philHealth.toLocaleString()}\n` +
+                    `Pag-IBIG: ₱${pagIbig.toLocaleString()}\n` +
+                    `Withholding Tax: ₱${tax.toLocaleString()}\n` +
+                    `----------------------------\n` +
+                    `Total Deductions: ₱${totalDeductions.toLocaleString()}\n` +
+                    `----------------------------\n` +
+                    `NET PAY: ₱${net.toLocaleString()}`);
+
+                loadDashboard();
+
+            } catch (err) {
+                alert("❌ Error displaying results.");
+            }
+        }
+
+        async function viewAttendance(id) {
+            const res = await fetch(`${API_BASE}/Attendance/${id}?startDate=2026-02-01&endDate=2026-02-28`);
+            const records = await res.json();
+            alert(records.map(r => `${r.recordDate.split('T')[0]}: ${r.isPresent ? '✅' : '❌'}`).join('\n') || "No logs.");
+        }
+
+        async function deleteEmployee(id) {
+            if (confirm("Delete?")) { await fetch(`${API_BASE}/Employee/${id}`, { method: 'DELETE' }); loadDashboard(); }
+        }
+
+        async function updateRate(id, fullName) {
+            const rate = prompt("New rate:");
+            if (!rate) return;
+            const names = fullName.split(' ');
+            await fetch(`${API_BASE}/Employee/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ firstName: names[0], lastName: names[names.length - 1], dailyRate: parseFloat(rate), dateOfBirth: "1995-01-01", workingDays: "MWF" })
+            });
+            loadDashboard();
+        }
+
+        window.onload = loadDashboard;
+    </script>
+</body>
+
+</html>
