@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payroll Management</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="sidebar">
+        <h2>Jinji Payroll</h2>
+        <p onclick="showSection('dashboard')">🏠 Dashboard</p>
+        <p onclick="showSection('employees')">👥 Employees</p>
+        <p onclick="showSection('attendance')">📅 Attendance</p>
+    </div>
+
+    <div class="main-content">
+        <div id="dashboard-sec" class="section active-section">
+            <header>
+                <h1>Dashboard</h1>
+                <button class="btn" onclick="loadDashboard()">🔄 Sync</button>
+            </header>
+            <div class="stats-container">
+                <div class="card" style="border-left: 5px solid #1877f2;">
+                    <h3>Employees</h3>
+                    <p id="totalEmployees">0</p>
+                </div>
+                <div class="card" style="border-left: 5px solid #42b72a;">
+                    <h3>Monthly Payout</h3>
+                    <p id="totalPayroll">₱0.00</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="employees-sec" class="section">
+            <header>
+                <h1>Employee Management</h1>
+            </header>
+            <section class="form-section">
+                <form id="employeeForm" class="form-grid">
+                    <input type="text" id="fName" placeholder="First Name" required>
+                    <input type="text" id="lName" placeholder="Last Name" required>
+                    <input type="text" id="mName" placeholder="Middle Name">
+                    <input type="date" id="dob" required>
+                    <input type="number" id="rate" placeholder="Daily Rate" required>
+                    <select id="schedule">
+                        <option value="MWF">MWF</option>
+                        <option value="TTHS">TTHS</option>
+                    </select>
+                    <button type="submit" class="btn">＋ Add Employee</button>
+                </form>
+            </section>
+            <input type="text" id="employeeSearch" placeholder="🔍 Search employees..." onkeyup="filterEmployees()">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Rate</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="employeeBody"></tbody>
+            </table>
+        </div>
+
+        <div id="attendance-sec" class="section">
+            <header>
+                <h1>Log Attendance</h1>
+            </header>
+            <section class="form-section">
+                <form id="attendanceForm" class="form-grid">
+                    <select id="attEmployeeId" required>
+                        <option value="">Select...</option>
+                    </select>
+                    <input type="date" id="attDate" required>
+                    <select id="attStatus">
+                        <option value="true">Present</option>
+                        <option value="false">Absent</option>
+                    </select>
+                    <button type="submit" class="btn" style="background: #42b72a;">Save Record</button>
+                </form>
+            </section>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+
+</html>

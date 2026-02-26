@@ -1,0 +1,139 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    margin: 0;
+    background: #f0f2f5;
+    color: #1c1e21;
+}
+
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    background: #1877f2;
+    color: white;
+    padding: 25px;
+    position: fixed;
+}
+
+.sidebar h2 {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+}
+
+.sidebar p {
+    margin: 15px 0;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: 0.3s;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.sidebar p:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.main-content {
+    margin-left: 290px;
+    padding: 40px;
+    width: calc(100% - 330px);
+}
+
+.section {
+    display: none;
+}
+
+.active-section {
+    display: block;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.card,
+.form-section {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 30px;
+}
+
+.stats-container {
+    display: flex;
+    gap: 20px;
+}
+
+.card h3 {
+    color: #65676b;
+    font-size: 0.8rem;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.card p {
+    font-size: 1.7rem;
+    font-weight: bold;
+    margin: 10px 0 0;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+}
+
+input,
+select {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    outline: none;
+}
+
+.btn {
+    background: #1877f2;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btn-pay { background: #42b72a; padding: 6px 10px; font-size: 0.75rem; }
+.btn-view { background: #65676b; padding: 6px 10px; font-size: 0.75rem; }
+.btn-edit { background: #f7b924; padding: 6px 10px; font-size: 0.75rem; color: #000; }
+.btn-delete { background: #fa3e3e; padding: 6px 10px; font-size: 0.75rem; }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid #f0f2f5;
+}
+
+th {
+    background: #f8f9fa;
+    color: #65676b;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+}
+
+#employeeSearch {
+    width: 100%;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
